@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>All-in-One Calculator</title>
+  <!-- Using a modern font from Google -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2c3e50;   /* 60% */
+      --secondary: #34495e; /* 30% */
+      --accent: #e67e22;    /* 10% */
+      --bg: #f7f9fc;
+      --text: #2c3e50;
+    }
+    /* Global Styles */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+    }
+    /* Header */
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      padding: 20px;
+      text-align: center;
+      color: #fff;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5em;
+      font-weight: 500;
+    }
+    /* Navigation Bar */
+    nav {
+      background-color: var(--secondary);
+      padding: 10px 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    nav button {
+      background-color: var(--accent);
+      color: #fff;
+      border: none;
+      margin: 5px;
+      padding: 10px 20px;
+      font-size: 1em;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+    nav button:hover {
+      background-color: #d35400;
+      transform: translateY(-2px);
+    }
+    /* Calculator Container */
+    .calculator-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 20px;
+    }
+    /* Calculator Card */
+    .calculator {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      padding: 20px;
+      margin: 10px;
+      width: 100%;
+      max-width: 500px;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+    .calculator h2 {
+      margin-top: 0;
+      color: var(--primary);
+    }
+    .calculator label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+    .calculator input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      transition: border-color 0.3s;
+    }
+    .calculator input:focus {
+      border-color: var(--accent);
+      outline: none;
+    }
+    .calculator button {
+      width: 100%;
+      background-color: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1em;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+    .calculator button:hover {
+      background-color: #1a242f;
+      transform: translateY(-2px);
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 1.1em;
+      font-weight: bold;
+      white-space: pre-line;
+      min-height: 30px;
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #ecf0f1;
+      color: #7f8c8d;
+    }
+    /* Utility Class to Hide Calculators */
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <h1>All-in-One Calculator</h1>
+  </header>
+  
+  <!-- Navigation -->
+  <nav>
+    <button onclick="showCalculator('sip')">SIP</button>
+    <button onclick="showCalculator('slip')">SLIP</button>
+    <button onclick="showCalculator('emi')">EMI</button>
+    <button onclick="showCalculator('loan')">LOAN</button>
+    <button onclick="showCalculator('salary')">SALARY</button>
+    <button onclick="showCalculator('interest')">INTEREST</button>
+    <button onclick="showCalculator('seventh')">7TH SLIP</button>
+    <button onclick="showCalculator('funds')">FUNDS</button>
+    <button onclick="showCalculator('commission')">COMMISSION</button>
+  </nav>
+  
+  <!-- Calculator Panels -->
+  <div class="calculator-container">
+    <!-- SIP Calculator -->
+    <div id="sip" class="calculator">
+      <h2>SIP Calculator</h2>
+      <label for="sip_amount">Monthly Investment (₹):</label>
+      <input type="number" id="sip_amount" placeholder="Enter monthly investment">
+      <label for="sip_rate">Annual Interest Rate (%):</label>
+      <input type="number" id="sip_rate" placeholder="Enter interest rate">
+      <label for="sip_years">Investment Period (Years):</label>
+      <input type="number" id="sip_years" placeholder="Enter period in years">
+      <button onclick="calculateSIP()">Calculate SIP</button>
+      <div class="result" id="sip_result"></div>
+    </div>
+    
+    <!-- SLIP Calculator (Salary Slip) -->
+    <div id="slip" class="calculator hidden">
+      <h2>SLIP Calculator (Salary Slip)</h2>
+      <label for="basic_salary">Basic Salary (₹):</label>
+      <input type="number" id="basic_salary" placeholder="Enter basic salary">
+      <label for="hra">House Rent Allowance (₹):</label>
+      <input type="number" id="hra" placeholder="Enter HRA">
+      <label for="allowances">Other Allowances (₹):</label>
+      <input type="number" id="allowances" placeholder="Enter allowances">
+      <label for="deductions">Deductions (₹):</label>
+      <input type="number" id="deductions" placeholder="Enter deductions">
+      <button onclick="calculateSLIP()">Calculate Net Salary</button>
+      <div class="result" id="slip_result"></div>
+    </div>
+    
+    <!-- EMI Calculator -->
+    <div id="emi" class="calculator hidden">
+      <h2>EMI Calculator</h2>
+      <label for="emi_loan">Loan Amount (₹):</label>
+      <input type="number" id="emi_loan" placeholder="Enter loan amount">
+      <label for="emi_rate">Annual Interest Rate (%):</label>
+      <input type="number" id="emi_rate" placeholder="Enter interest rate">
+      <label for="emi_years">Loan Period (Years):</label>
+      <input type="number" id="emi_years" placeholder="Enter loan period">
+      <button onclick="calculateEMI()">Calculate EMI</button>
+      <div class="result" id="emi_result"></div>
+    </div>
+    
+    <!-- LOAN Calculator -->
+    <div id="loan" class="calculator hidden">
+      <h2>Loan Calculator</h2>
+      <label for="loan_principal">Principal Amount (₹):</label>
+      <input type="number" id="loan_principal" placeholder="Enter principal amount">
+      <label for="loan_rate">Annual Interest Rate (%):</label>
+      <input type="number" id="loan_rate" placeholder="Enter interest rate">
+      <label for="loan_years">Loan Period (Years):</label>
+      <input type="number" id="loan_years" placeholder="Enter loan period">
+      <button onclick="calculateLoan()">Calculate Loan Details</button>
+      <div class="result" id="loan_result"></div>
+    </div>
+    
+    <!-- SALARY Calculator -->
+    <div id="salary" class="calculator hidden">
+      <h2>Salary Calculator</h2>
+      <label for="gross_salary">Gross Salary (₹):</label>
+      <input type="number" id="gross_salary" placeholder="Enter gross salary">
+      <label for="tax_percent">Tax Deduction (%) :</label>
+      <input type="number" id="tax_percent" placeholder="Enter tax percentage">
+      <button onclick="calculateSalary()">Calculate Net Salary</button>
+      <div class="result" id="salary_result"></div>
+    </div>
+    
+    <!-- INTEREST Calculator (Compound Interest) -->
+    <div id="interest" class="calculator hidden">
+      <h2>Compound Interest Calculator</h2>
+      <label for="ci_principal">Principal (₹):</label>
+      <input type="number" id="ci_principal" placeholder="Enter principal">
+      <label for="ci_rate">Annual Interest Rate (%):</label>
+      <input type="number" id="ci_rate" placeholder="Enter interest rate">
+      <label for="ci_years">Number of Years:</label>
+      <input type="number" id="ci_years" placeholder="Enter number of years">
+      <button onclick="calculateInterest()">Calculate Amount</button>
+      <div class="result" id="interest_result"></div>
+    </div>
+    
+    <!-- 7TH SLIP Calculator (Bonus) -->
+    <div id="seventh" class="calculator hidden">
+      <h2>7th SLIP Calculator (Bonus)</h2>
+      <label for="monthly_salary">Monthly Salary (₹):</label>
+      <input type="number" id="monthly_salary" placeholder="Enter monthly salary">
+      <label for="bonus_rate">Bonus Percentage (%):</label>
+      <input type="number" id="bonus_rate" placeholder="Enter bonus percentage">
+      <button onclick="calculateSeventh()">Calculate Bonus</button>
+      <div class="result" id="seventh_result"></div>
+    </div>
+    
+    <!-- FUNDS Calculator (Future Value) -->
+    <div id="funds" class="calculator hidden">
+      <h2>Funds Calculator (Future Value)</h2>
+      <label for="initial_investment">Initial Investment (₹):</label>
+      <input type="number" id="initial_investment" placeholder="Enter initial investment">
+      <label for="monthly_contribution">Monthly Contribution (₹):</label>
+      <input type="number" id="monthly_contribution" placeholder="Enter monthly contribution">
+      <label for="funds_rate">Annual Interest Rate (%):</label>
+      <input type="number" id="funds_rate" placeholder="Enter interest rate">
+      <label for="funds_years">Investment Period (Years):</label>
+      <input type="number" id="funds_years" placeholder="Enter period in years">
+      <button onclick="calculateFunds()">Calculate Future Value</button>
+      <div class="result" id="funds_result"></div>
+    </div>
+    
+    <!-- COMMISSION Calculator -->
+    <div id="commission" class="calculator hidden">
+      <h2>Commission Calculator</h2>
+      <label for="sales_amount">Sales Amount (₹):</label>
+      <input type="number" id="sales_amount" placeholder="Enter sales amount">
+      <label for="commission_rate">Commission Rate (%):</label>
+      <input type="number" id="commission_rate" placeholder="Enter commission rate">
+      <button onclick="calculateCommission()">Calculate Commission</button>
+      <div class="result" id="commission_result"></div>
+    </div>
+  </div>
+  
+  <!-- Footer -->
+  <footer>
+    <p><strong>User Note:</strong> Select a calculator from the menu, fill in the required fields, and click the button to view your result. All calculations are for estimation purposes.</p>
+  </footer>
+  
+  <script>
+    // Function to display the selected calculator and hide the others
+    function showCalculator(type) {
+      var calculators = document.getElementsByClassName('calculator');
+      for (var i = 0; i < calculators.length; i++) {
+        calculators[i].classList.add('hidden');
+      }
+      document.getElementById(type).classList.remove('hidden');
+    }
+    // Default: show SIP calculator on load
+    showCalculator('sip');
+
+    // SIP Calculator Function
+    function calculateSIP() {
+      var monthlyInvestment = parseFloat(document.getElementById('sip_amount').value);
+      var annualRate = parseFloat(document.getElementById('sip_rate').value) / 100 / 12;
+      var period = parseInt(document.getElementById('sip_years').value) * 12;
+      var resultElem = document.getElementById('sip_result');
+      if (isNaN(monthlyInvestment) || isNaN(annualRate) || isNaN(period) || period <= 0) {
+        resultElem.innerText = 'Please enter valid numbers.';
+        return;
+      }
+      var result = monthlyInvestment * ((Math.pow(1 + annualRate, period) - 1) / annualRate) * (1 + annualRate);
+      resultElem.innerText = 'Maturity Amount: ₹' + result.toFixed(2);
+    }
+    
+    // SLIP Calculator Function (Salary Slip)
+    function calculateSLIP() {
+      var basic = parseFloat(document.getElementById('basic_salary').value);
+      var hra = parseFloat(document.getElementById('hra').value);
+      var allowances = parseFloat(document.getElementById('allowances').value);
+      var deductions = parseFloat(document.getElementById('deductions').value);
+      var resultElem = document.getElementById('slip_result');
+      if (isNaN(basic) || isNaN(hra) || isNaN(allowances) || isNaN(deductions)) {
+        resultElem.innerText = 'Please enter valid numbers.';
+        return;
+      }
+      var netSalary = basic + hra + allowances - deductions;
+      resultElem.innerText = 'Net Salary: ₹' + netSalary.toFixed(2);
+    }
+    
+    // EMI Calculator Function
+    function calculateEMI() {
+      var loanAmount = parseFloat(document.getElementById('emi_loan').value);
+      var monthlyRate = parseFloat(document.getElementById('emi_rate').value) / 100 / 12;
+      var months = parseInt(document.getElementById('emi_years').value) * 12;
+      var resultElem = document.getElementById('emi_result');
+      if (isNaN(loanAmount) || isNaN(monthlyRate) || isNaN(months) || months <= 0) {
+        resultElem.innerText = 'Please enter valid numbers.';
+        return;
+      }
+      var emi = loanAmount * monthlyRate * Math.pow(1 + monthlyRate, months) / (Math.pow(1 + monthlyRate, months) - 1);
+      resultElem.innerText = 'Monthly EMI: ₹' + emi.toFixed(2);
+    }
+    
+    // LOAN Calculator Function
+    function calculateLoan() {
+      var principal = parseFloat(document.getElementById('loan_principal').value);
+      var annualRate = parseFloat(document.getElementById('loan_rate').value) / 100 / 12;
+      var months = parseInt(document.getElementById('loan_years').value) * 12;
+      var resultElem = document.getElementById('loan_result');
+      if (isNaN(principal) || isNaN(annualRate) || isNaN(months) || months <= 0) {
+        resultElem.innerText = 'Please enter valid numbers.';
+        return;
+      }
+      var emi = principal * annualRate * Math.pow(1 + annualRate, months) / (Math.pow(1 + annualRate, months) - 1);
+      var totalPayment = emi * months;
+      var totalInterest = totalPayment - principal;
+      resultElem.innerText = 'Monthly EMI: ₹' + emi.toFixed(2) + '\nTotal Payment: ₹' + totalPayment.toFixed(2) + '\nTotal Interest: ₹' + totalInterest.toFixed(2);
+    }
+    
+    // SALARY Calculator Function
+    function calculateSalary() {
+      var gross = parseFloat(document.getElementById('gross_salary').value);
+      var taxPercent = parseFloat(document.getElementById('tax_percent').value);
+      var resultElem = document.getElementById('salary_result');
+      if (isNaN(gross) || isNaN(taxPercent)) {
+        resultElem.innerText = 'Please enter valid numbers.';
+        return;
+      }
+      var taxAmount = gross * (taxPercent / 100);
+      var net = gross - taxAmount;
+      resultElem.innerText = 'Net Salary: ₹' + net.toFixed(2) + ' (Tax Deducted: ₹' + taxAmount.toFixed(2) + ')';
+    }
+    
+    // INTEREST Calculator Function (Compound Interest)
+    function calculateInterest() {
+      var principal = parseFloat(document.getElementById('ci_principal').value);
+      var rate = parseFloat(document.getElementById('ci_rate').value) / 100;
+      var years = parseFloat(document.getElementById('ci_years').value);
+      var resultElem = document.getElementById('interest_result');
+      if (isNaN(principal) || isNaN(rate) || isNaN(years) || years <= 0) {
+        resultElem.innerText = 'Please enter valid numbers.';
+        return;
+      }
+      var amount = principal * Math.pow(1 + rate, years);
+      var interest = amount - principal;
+      resultElem.innerText = 'Amount: ₹' + amount.toFixed(2) + '\nInterest: ₹' + interest.toFixed(2);
+    }
+    
+    // 7TH SLIP Calculator Function (Bonus)
+    function calculateSeventh() {
+      var monthlySalary = parseFloat(document.getElementById('monthly_salary').value);
+      var bonusRate = parseFloat(document.getElementById('bonus_rate').value);
+      var resultElem = document.getElementById('seventh_result');
+      if (isNaN(monthlySalary) || isNaN(bonusRate)) {
+        resultElem.innerText = 'Please enter valid numbers.';
+        return;
+      }
+      var bonus = monthlySalary * (bonusRate / 100);
+      resultElem.innerText = 'Bonus Amount: ₹' + bonus.toFixed(2);
+    }
+    
+    // FUNDS Calculator Function (Future Value)
+    function calculateFunds() {
+      var initial = parseFloat(document.getElementById('initial_investment').value);
+      var monthly = parseFloat(document.getElementById('monthly_contribution').value);
+      var annualRate = parseFloat(document.getElementById('funds_rate').value) / 100 / 12;
+      var months = parseInt(document.getElementById('funds_years').value) * 12;
+      var resultElem = document.getElementById('funds_result');
+      if (isNaN(initial) || isNaN(monthly) || isNaN(annualRate) || isNaN(months) || months <= 0) {
+        resultElem.innerText = 'Please enter valid numbers.';
+        return;
+      }
+      var futureValue = initial * Math.pow(1 + annualRate, months) + monthly * ((Math.pow(1 + annualRate, months) - 1) / annualRate);
+      resultElem.innerText = 'Future Value: ₹' + futureValue.toFixed(2);
+    }
+    
+    // COMMISSION Calculator Function
+    function calculateCommission() {
+      var sales = parseFloat(document.getElementById('sales_amount').value);
+      var commissionRate = parseFloat(document.getElementById('commission_rate').value);
+      var resultElem = document.getElementById('commission_result');
+      if (isNaN(sales) || isNaN(commissionRate)) {
+        resultElem.innerText = 'Please enter valid numbers.';
+        return;
+      }
+      var commission = sales * (commissionRate / 100);
+      resultElem.innerText = 'Commission: ₹' + commission.toFixed(2);
+    }
+  </script>
+</body>
+</html>
